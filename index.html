@@ -1,1 +1,211 @@
-<h1>Hello world!</h1>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote Display</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: white;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 40px;
+            width: 800px;
+            height: 480px;
+            overflow: hidden;
+        }
+
+        .date {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 14px;
+            color: #666;
+            font-weight: 300;
+        }
+
+        .quote-container {
+            text-align: center;
+            max-width: 700px;
+            padding: 20px;
+        }
+
+        .quote {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            line-height: 1.4;
+            color: #333;
+            margin-bottom: 30px;
+            font-weight: 400;
+        }
+
+        .quote.italic {
+            font-style: italic;
+        }
+
+        .attribution {
+            font-size: 16px;
+            color: #888;
+            font-weight: 400;
+            margin-top: 20px;
+        }
+
+        .attribution::before {
+            content: "— ";
+        }
+
+        @media (max-width: 800px) {
+            .quote {
+                font-size: 28px;
+            }
+
+            .attribution {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="date" id="date"></div>
+
+    <div class="quote-container">
+        <div class="quote" id="quote"></div>
+        <div class="attribution" id="attribution"></div>
+    </div>
+
+    <script>
+        // Quote database
+        const quotes = [
+            {
+                text: "The only way to do great work is to love what you do.",
+                attribution: "Steve Jobs"
+            },
+            {
+                text: "Life is what happens when you're busy making other plans.",
+                attribution: "John Lennon"
+            },
+            {
+                text: "The future belongs to those who believe in the beauty of their dreams.",
+                attribution: "Eleanor Roosevelt"
+            },
+            {
+                text: "Success is not final, failure is not fatal: it is the courage to continue that counts.",
+                attribution: "Winston Churchill"
+            },
+            {
+                text: "The journey of a thousand miles begins with one step.",
+                attribution: "Lao Tzu"
+            },
+            {
+                text: "What you get by achieving your goals is not as important as what you become by achieving your goals.",
+                attribution: "Zig Ziglar"
+            },
+            {
+                text: "The mind is everything. What you think you become.",
+                attribution: "Buddha"
+            },
+            {
+                text: "The best time to plant a tree was 20 years ago. The second best time is now.",
+                attribution: "Chinese Proverb"
+            },
+            {
+                text: "An unexamined life is not worth living.",
+                attribution: "Socrates"
+            },
+            {
+                text: "The only limit to our realization of tomorrow is our doubts of today.",
+                attribution: "Franklin D. Roosevelt"
+            },
+            {
+                text: "It does not matter how slowly you go as long as you do not stop.",
+                attribution: "Confucius"
+            },
+            {
+                text: "The way to get started is to quit talking and begin doing.",
+                attribution: "Walt Disney"
+            },
+            {
+                text: "Your time is limited, don't waste it living someone else's life.",
+                attribution: "Steve Jobs"
+            },
+            {
+                text: "The greatest glory in living lies not in never falling, but in rising every time we fall.",
+                attribution: "Nelson Mandela"
+            },
+            {
+                text: "In the middle of difficulty lies opportunity.",
+                attribution: "Albert Einstein"
+            }
+        ];
+
+        // Function to get current date in desired format
+        function getCurrentDate() {
+            const now = new Date();
+            const options = {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            };
+            return now.toLocaleDateString('en-US', options);
+        }
+
+        // Function to get quote index based on time (changes every 4 hours)
+        function getQuoteIndex() {
+            const now = new Date();
+            const hours = now.getHours();
+            const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+            const fourHourBlock = Math.floor(hours / 4);
+            const totalBlocks = dayOfYear * 6 + fourHourBlock; // 6 four-hour blocks per day
+            return totalBlocks % quotes.length;
+        }
+
+        // Function to update the display
+        function updateDisplay() {
+            const dateElement = document.getElementById('date');
+            const quoteElement = document.getElementById('quote');
+            const attributionElement = document.getElementById('attribution');
+
+            // Update date
+            dateElement.textContent = getCurrentDate();
+
+            // Get current quote
+            const quoteIndex = getQuoteIndex();
+            const currentQuote = quotes[quoteIndex];
+
+            // Update quote and attribution
+            quoteElement.textContent = currentQuote.text;
+            attributionElement.textContent = currentQuote.attribution;
+
+            // Add italic styling to some quotes for variety
+            if (quoteIndex % 3 === 0) {
+                quoteElement.classList.add('italic');
+            } else {
+                quoteElement.classList.remove('italic');
+            }
+        }
+
+        // Initialize display
+        updateDisplay();
+
+        // Update every minute to keep date current
+        setInterval(updateDisplay, 60000);
+    </script>
+</body>
+
+</html>
